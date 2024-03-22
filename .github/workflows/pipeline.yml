@@ -30,3 +30,20 @@ jobs:
           api-key: ${{ secrets.MY_RENDER_API_KEY }}
       - name: Wait for deploy 60 seconds
         run: sleep 60
+  run-ui-tests:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'npm'
+    - name: Install project dependencies
+      run: npm install
+    - name: Install Playwright
+      run: npx playwright install
+    - name: Run ui tests  
+      run: npm run test:ui
